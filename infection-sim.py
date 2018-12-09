@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import collections
 from textwrap import wrap
 np.set_printoptions(suppress=True)
 
@@ -47,6 +48,24 @@ def SIR(n, N, R, p, Y_0):
     #print "n: ", n, "   N: ", N, "   R: ", R, "   p: ", p, "   Y_0: ", Y_0, "   t: ", t, "   y: ", y, "   Y: ", Y, "   X: ", X, "   Z: ", Z
 
 
+def graph(durations):
+    counter = collections.Counter(durations)  # create counter for data
+    counter_array = np.array(list(counter.items()))  # convert counter to 2d array
+    
+    # split 2d array into 2 1d arrays
+    durs, counts = zip(*counter_array)
+    
+    plt.plot(durs, counts)
+
+    plt.xlabel('duration (days)')
+    plt.ylabel('num instances')
+    plt.title('Virus Simulation')
+    plt.grid(True)
+
+    #plt.savefig("test.png")
+    plt.show()
+
+
 def main():
     num_sims = 200
     
@@ -81,6 +100,8 @@ def main():
         variance += (d - mean_duration)**2
     variance = variance / num_sims
     print "variance\t\t", variance, "\n"
+
+    graph(durations)
 
 
 if __name__=="__main__":
