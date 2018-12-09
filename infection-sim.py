@@ -48,26 +48,39 @@ def SIR(n, N, R, p, Y_0):
 
 
 def main():
-    num_sims = 20
+    num_sims = 200
     
-    n = 1000   # population size
+    n = 200   # population size
     N = 4     # number of population contacts
-    R = 3     # recovery period
+    R = 2     # recovery period
     p = 0.1   # probalbilty of tranmision of disease
     Y_0 = 2   # num people infected at beginning
-   
+    
     sum_duration = 0
     total_infected = 0
-
+    
+    durations = np.array([])   # array of durations
+    
     print "\nSimulation #\t\tDuration\t\t# Infected\n-------------          ------------            -------------"
     for i in range(num_sims):
         duration, sum_infected = SIR(n, N, R, p, Y_0)
+        
+        durations = np.append(durations, [duration])   # adds run duration to durations array
+        
         sum_duration += duration
         total_infected += sum_infected
         print i+1, "\t\t\t", duration, "\t\t\t", sum_infected
 
     print "-------------          ------------            -------------"
-    print "mean\t\t\t", float(sum_duration)/num_sims, "\t\t\t", float(total_infected)/num_sims, "\n"
+    mean_duration = float(sum_duration)/num_sims
+    mean_infected = float(total_infected)/num_sims
+    print "mean\t\t\t", mean_duration, "\t\t\t", mean_infected
+    
+    variance = 0.0
+    for d in durations:
+        variance += (d - mean_duration)**2
+    variance = variance / num_sims
+    print "variance\t\t", variance, "\n"
 
 
 if __name__=="__main__":
