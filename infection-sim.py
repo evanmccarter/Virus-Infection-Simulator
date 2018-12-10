@@ -23,16 +23,16 @@ def SIR(n, N, R, p, Y_0):
     #print t, "\t\t\t", t, "\t\t\t", y
 
     # loop
-    while(np.sum(Y) > 0):
-        q = 1 - (1- ((p*y)/(n-1)))**N   # prob one individual become infected
+    while(np.count_nonzero(Y) != 0):        # loop while something is in Y array 
+        q = 1 - (1- ((p*y)/(n-1)))**N       # prob one individual become infected
         y_run = np.random.binomial(X, q)    # new num people infected
         
         total_sum_run += y_run  # increment total sum run by num newly infected
 
-        X = X - y_run   # reduce num suseptible by num recently infected
-        Z = Z + Y[R - 1] # increase num recovered by last spot of time sick array 
+        X = X - y_run        # reduce num suseptible by num recently infected
+        Z = Z + Y[R - 1]     # increase num recovered by last spot of time sick array 
         
-        # shift the time sick array (Y) over by onei, put new num infected at beginning
+        # shift the time sick array (Y) over by one, put new num infected at beginning
         Y = np.roll(Y, 1)
         Y[0] = y_run
 
@@ -50,11 +50,11 @@ def SIR(n, N, R, p, Y_0):
 
 def graph(durations):
     counter = collections.Counter(durations)  # create counter for data
-    counter_array = np.array(list(counter.items()))  # convert counter to 2d array
+    counter_array = np.array(counter.items())  # convert counter to 2d array
     
     # split 2d array into 2 1d arrays
-    durs, counts = zip(*counter_array)
-    
+    durs, counts = counter_array.T
+     
     plt.plot(durs, counts)
 
     plt.xlabel('duration (days)')
@@ -66,15 +66,7 @@ def graph(durations):
     plt.show()
 
 
-def main():
-    num_sims = 200
-    
-    n = 200   # population size
-    N = 4     # number of population contacts
-    R = 2     # recovery period
-    p = 0.1   # probalbilty of tranmision of disease
-    Y_0 = 2   # num people infected at beginning
-    
+def runner(num_sims, n, N, R, p, Y_0):  
     sum_duration = 0
     total_infected = 0
     
@@ -102,6 +94,18 @@ def main():
     print "variance\t\t", variance, "\n"
 
     graph(durations)
+
+
+def main():
+    num_sims = 200
+    
+    n = 200   # population size
+    N = 4     # number of population contacts
+    R = 2     # recovery period
+    p = 0.1   # probalbilty of tranmision of disease
+    Y_0 = 2   # num people infected at beginning
+
+    runner(num_sims, n, N, R, p, Y_0)
 
 
 if __name__=="__main__":
