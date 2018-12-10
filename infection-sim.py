@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,8 +19,8 @@ def SIR(n, N, R, p, Y_0):
 
     total_sum_run = y
 
-    #print "\nSimulation #\t\tDuration\t\t# Infected\n-------------          ------------            -------------"
-    #print t, "\t\t\t", t, "\t\t\t", y
+    #print("\nSimulation #\t\tDuration\t\t# Infected\n-------------          ------------            -------------")
+    #print(t, "\t\t\t", t, "\t\t\t", y)
 
     # loop
     while(np.count_nonzero(Y) != 0):        # loop while something is in Y array 
@@ -40,22 +40,22 @@ def SIR(n, N, R, p, Y_0):
         y = np.sum(Y)
 
         t += 1 
-        #print t, "\t\t\t", t, "\t\t\t", y, Y
+        #print(t, "\t\t\t", t, "\t\t\t", y, Y)
 
     return t, total_sum_run
-    print ""
+    print("")
 
-    #print "n: ", n, "   N: ", N, "   R: ", R, "   p: ", p, "   Y_0: ", Y_0, "   t: ", t, "   y: ", y, "   Y: ", Y, "   X: ", X, "   Z: ", Z
+    #print("n: ", n, "   N: ", N, "   R: ", R, "   p: ", p, "   Y_0: ", Y_0, "   t: ", t, "   y: ", y, "   Y: ", Y, "   X: ", X, "   Z: ", Z)
 
 
 def graph(durations):
     counter = collections.Counter(durations)  # create counter for data
-    counter_array = np.array(counter.items())  # convert counter to 2d array
-    
+    counter_array = np.array(list(sorted(counter.items())))  # convert counter to 2d array
+
     # split 2d array into 2 1d arrays
     durs, counts = counter_array.T
-     
-    plt.plot(durs, counts)
+
+    plt.plot(durs, counts, 'bo-')
 
     plt.xlabel('duration (days)')
     plt.ylabel('num instances')
@@ -72,7 +72,7 @@ def runner(num_sims, n, N, R, p, Y_0):
     
     durations = np.array([])   # array of durations
     
-    print "\nSimulation #\t\tDuration\t\t# Infected\n-------------          ------------            -------------"
+    print("\nSimulation #\t\tDuration\t\t# Infected\n-------------          ------------            -------------")
     for i in range(num_sims):
         duration, sum_infected = SIR(n, N, R, p, Y_0)
         
@@ -80,18 +80,18 @@ def runner(num_sims, n, N, R, p, Y_0):
         
         sum_duration += duration
         total_infected += sum_infected
-        print i+1, "\t\t\t", duration, "\t\t\t", sum_infected
+        print(i+1, "\t\t\t", duration, "\t\t\t", sum_infected)
 
-    print "-------------          ------------            -------------"
+    print("-------------          ------------            -------------")
     mean_duration = float(sum_duration)/num_sims
     mean_infected = float(total_infected)/num_sims
-    print "mean\t\t\t", mean_duration, "\t\t\t", mean_infected
+    print("mean\t\t\t", mean_duration, "\t\t\t", mean_infected)
     
     variance = 0.0
     for d in durations:
         variance += (d - mean_duration)**2
     variance = variance / num_sims
-    print "variance\t\t", variance, "\n"
+    print("variance\t\t", variance, "\n")
 
     graph(durations)
 
